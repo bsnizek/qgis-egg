@@ -18,13 +18,13 @@ setup(
             'Development Status :: 4 - Beta',
             'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
             'Programming Language :: Python',
-            'Programming Language :: Python :: 3.4'
+            'Programming Language :: Python :: 2.7'
         ],
         include_package_data=True,
         platforms="Any",
         package_dir={'': 'src'},
         packages=find_packages('src'),
-        namespace_packages=['hagr'],
+        namespace_packages=['qgis'],
         install_requires= [
 
         ],
