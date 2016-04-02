@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 version = '0.0.1'
 
 gui = Extension('gui',
-                sources=['gui/qgsmessagebar.cpp'])
+                sources=['qgis/gui/qgsmessagebar.cpp'])
 
 setup(
         name='qgis-egg',
