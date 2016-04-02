@@ -1,8 +1,12 @@
 #!/usr/bin/env python
+from distutils.extension import Extension
 
 from setuptools import setup, find_packages
 
 version = '0.0.1'
+
+gui = Extension('gui',
+                sources=['gui/qgsmessagebar.cpp'])
 
 setup(
         name='qgis-egg',
@@ -15,20 +19,15 @@ setup(
         url='https://github.com/bsnizek/qgis-egg',
         license='Apache License 2.0',
         classifiers=[
-            'Development Status :: 4 - Beta',
-            'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-            'Programming Language :: Python',
-            'Programming Language :: Python :: 2.7'
+                'Development Status :: 4 - Beta',
+                'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+                'Programming Language :: Python',
+                'Programming Language :: Python :: 2.7'
         ],
         include_package_data=True,
         platforms="Any",
         package_dir={'': 'src'},
         packages=find_packages('src'),
         namespace_packages=['qgis'],
-        install_requires= [
-
-        ],
-        dependency_links=[
-
-        ]
+        ext_modules=[gui]
 )
