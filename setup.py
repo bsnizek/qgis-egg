@@ -28,6 +28,7 @@ setup(
         platforms="Any",
         package_dir={'': 'src'},
         packages=find_packages('src'),
-        namespace_packages=['PyQt','qgis'],
-        ext_modules=[gui]
+        namespace_packages=['qgis'],
+        ext_package='src/qgis'
 )
+# ext_modules=[gui],
