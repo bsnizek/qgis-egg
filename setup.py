@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 
 version = '0.0.1'
 
-gui = Extension('gui',
-                sources=['src/qgis/gui/qgsmessagebar.cpp'])
+#gui = Extension('gui',
+#                sources=['src/qgis/gui/qgsmessagebar.cpp'])
 
 setup(
         name='qgis-egg',
@@ -29,6 +29,7 @@ setup(
         package_dir={'': 'src'},
         packages=find_packages('src'),
         namespace_packages=['qgis'],
-        ext_package='src/qgis'
+
 )
 # ext_modules=[gui],
+#ext_package='src/qgis'
