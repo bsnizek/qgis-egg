@@ -17,10 +17,12 @@
 ***************************************************************************
 """
 
-# -*- coding: utf-8 -*-
-__author__ = 'besn'
 from pkgutil import extend_path
+from pkg_resources import declare_namespace
+
 __path__ = extend_path(__path__, __name__)
+
+declare_namespace('qgis')
 
 __author__ = 'Martin Dobias'
 __date__ = 'January 2007'
