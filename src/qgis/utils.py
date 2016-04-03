@@ -16,10 +16,6 @@
 *                                                                         *
 ***************************************************************************
 """
-from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 
 __author__ = 'Martin Dobias'
 __date__ = 'November 2009'
@@ -32,8 +28,8 @@ QGIS utilities module
 
 """
 
-from PyQt.QtCore import QCoreApplication, QLocale
-from PyQt.QtWidgets import QPushButton, QApplication
+from PyQt4.QtCore import QCoreApplication, QLocale
+from PyQt4.QtGui import QPushButton, QApplication
 from qgis.core import QGis, QgsExpression, QgsMessageLog, qgsfunction, QgsMessageOutput
 from qgis.gui import QgsMessageBar
 
@@ -41,21 +37,11 @@ import sys
 import traceback
 import glob
 import os.path
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import ConfigParser
 import warnings
 import codecs
 import time
 import functools
-
-if sys.version_info[0] >= 3:
-    import builtins
-    builtins.__dict__['unicode'] = str
-    builtins.__dict__['basestring'] = str
-    builtins.__dict__['long'] = int
-    builtins.__dict__['Set'] = set
 
 # ######################
 # ERROR HANDLING
@@ -67,7 +53,7 @@ warnings.filterwarnings("ignore", "the sets module is deprecated")
 def showWarning(message, category, filename, lineno, file=None, line=None):
     stk = ""
     for s in traceback.format_stack()[:-2]:
-        stk += s.decode('utf-8', 'replace') if hasattr(s, 'decode') else s
+        stk += s.decode('utf-8', 'replace')
     QgsMessageLog.logMessage(
         "warning:%s\ntraceback:%s" % (warnings.formatwarning(message, category, filename, lineno), stk),
         QCoreApplication.translate("Python", "Python warning")
@@ -83,17 +69,13 @@ def showException(type, value, tb, msg, messagebar=False):
 
     logmessage = ''
     for s in traceback.format_exception(type, value, tb):
-        logmessage += s.decode('utf-8', 'replace') if hasattr(s, 'decode') else s
+        logmessage += s.decode('utf-8', 'replace')
 
     title = QCoreApplication.translate('Python', 'Python error')
     QgsMessageLog.logMessage(logmessage, title)
 
-    try:
-        blockingdialog = QApplication.instance().activeModalWidget()
-        window = QApplication.instance().activeWindow()
-    except:
-        blockingdialog = QApplication.activeModalWidget()
-        window = QApplication.activeWindow()
+    blockingdialog = QApplication.instance().activeModalWidget()
+    window = QApplication.instance().activeWindow()
 
     # Still show the normal blocking dialog in this case for now.
     if blockingdialog or not window or not messagebar or not iface:
@@ -157,10 +139,10 @@ def open_stack_dialog(type, value, tb, msg, pop_error=True):
     error = ''
     lst = traceback.format_exception(type, value, tb)
     for s in lst:
-        error += s.decode('utf-8', 'replace') if hasattr(s, 'decode') else s
+        error += s.decode('utf-8', 'replace')
     error = error.replace('\n', '<br>')
 
-    main_error = lst[-1].decode('utf-8', 'replace') if hasattr(lst[-1], 'decode') else lst[-1]
+    main_error = lst[-1].decode('utf-8', 'replace')
 
     version_label = QCoreApplication.translate('Python', 'Python version:')
     qgis_label = QCoreApplication.translate('Python', 'QGIS version:')
@@ -244,12 +226,10 @@ def findPlugins(path):
         if not os.path.exists(metadataFile):
             continue
 
-        cp = configparser.ConfigParser()
+        cp = ConfigParser.ConfigParser()
 
         try:
-            f = codecs.open(metadataFile, "r", "utf8")
-            cp.readfp(f)
-            f.close()
+            cp.readfp(codecs.open(metadataFile, "r", "utf8"))
         except:
             cp = None
 
@@ -483,7 +463,7 @@ def reloadProjectMacros():
     mod = imp.new_module("proj_macros_mod")
 
     # set the module code and store it sys.modules
-    exec(str(code), mod.__dict__)
+    exec(unicode(code), mod.__dict__)
     sys.modules["proj_macros_mod"] = mod
 
     # load new macros
@@ -581,22 +561,14 @@ def startServerPlugin(packageName):
 #######################
 # IMPORT wrapper
 
-_uses_builtins = True
-try:
-    import builtins
-    _builtin_import = builtins.__import__
-except AttributeError:
-    _uses_builtins = False
-    import __builtin__
-    _builtin_import = __builtin__.__import__
+import __builtin__
 
+_builtin_import = __builtin__.__import__
 _plugin_modules = {}
 
 
-def _import(name, globals={}, locals={}, fromlist=[], level=None):
+def _import(name, globals={}, locals={}, fromlist=[], level=-1):
     """ wrapper around builtin import that keeps track of loaded plugin modules """
-    if level is None:
-        level = -1 if sys.version_info[0] < 3 else 0
     mod = _builtin_import(name, globals, locals, fromlist, level)
 
     if mod and '__file__' in mod.__dict__:
@@ -617,7 +589,4 @@ def _import(name, globals={}, locals={}, fromlist=[], level=None):
     return mod
 
 
-if _uses_builtins:
-    builtins.__import__ = _import
-else:
-    __builtin__.__import__ = _import
+__builtin__.__import__ = _import
