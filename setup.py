@@ -26,5 +26,8 @@ setup(
         package_dir={'': 'src'},
         packages=find_packages('src'),
         namespace_packages=['qgis'],
+        package_data={
+                'qgis': ['*.so']
+        }
 
 )
