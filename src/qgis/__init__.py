@@ -17,6 +17,11 @@
 ***************************************************************************
 """
 
+# -*- coding: utf-8 -*-
+__author__ = 'besn'
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
+
 __author__ = 'Martin Dobias'
 __date__ = 'January 2007'
 __copyright__ = '(C) 2007, Martin Dobias'
